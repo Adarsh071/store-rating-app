@@ -29,9 +29,14 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Store Rating API is active and healthy.' });
 });
 
-// Start server
-app.listen(PORT, async () => {
-  console.log(`Server running on port ${PORT}`);
-  // Initialize Database & seed default admin if needed
-  await initDB();
-});
+// Initialize database
+initDB().catch(err => console.error('Database initialization failed:', err));
+
+// Start server when run directly
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;

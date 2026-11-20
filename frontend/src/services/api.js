@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+// Automatically uses environment variable in production, falls back to localhost in dev
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: API_BASE_URL,
 });
 
 // Interceptor to automatically add JWT token to every request
@@ -20,9 +23,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // Optional: Auto logout if unauthorized
-    }
     return Promise.reject(error);
   }
 );
